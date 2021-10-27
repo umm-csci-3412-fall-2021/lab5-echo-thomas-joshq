@@ -2,7 +2,6 @@ package echoserver;
 
 import java.net.*;
 import java.io.*;
-import java.util.*;  
 
 public class EchoClient {
   public static final int portNumber = 6013;
@@ -20,15 +19,18 @@ public class EchoClient {
     try {
       // Connect to the server
       Socket socket = new Socket(server, portNumber);
+
       OutputStream socketOutputStream = socket.getOutputStream();
       InputStream input = socket.getInputStream();
 
       int bytesRead;
+      //Read from system.in
       while ((bytesRead = System.in.read()) != -1) {
           socketOutputStream.write(bytesRead);
           socketOutputStream.flush();
           Byte output = (byte) input.read();
-          System.out.println(output);
+          System.out.write(output);
+          System.out.flush();
       }
       socket.shutdownOutput();
 
