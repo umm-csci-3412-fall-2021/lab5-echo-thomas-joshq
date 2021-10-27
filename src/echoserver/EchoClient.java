@@ -21,23 +21,18 @@ public class EchoClient {
       // Connect to the server
       Socket socket = new Socket(server, portNumber);
       OutputStream socketOutputStream = socket.getOutputStream();
-      int count;
-      byte[] buffer = new byte[8192]; // or 4096, or more
-      byte[] b = new byte[System.in.read()];
+      InputStream input = socket.getInputStream();
 
-
-      for (int i = 0; i < b.length; i++) {
-        b[i] = (byte) System.in.read();
-
+      int bytesRead;
+      while ((bytesRead = System.in.read()) != -1) {
+          socketOutputStream.write(bytesRead);
+          socketOutputStream.flush();
+          Byte output = (byte) input.read();
+          System.out.println(output);
       }
-      for(int i = 0; i<b.length; i++){
-        socketOutputStream.write(b[i]);
-        InputStream input = socket.getInputStream();
-        byte output = (byte) input.read();
-        System.out.println(output);
-      }
-
       socket.shutdownOutput();
+
+      socket.close();
 
     // Provide some minimal error handling.
     } catch (ConnectException ce) {

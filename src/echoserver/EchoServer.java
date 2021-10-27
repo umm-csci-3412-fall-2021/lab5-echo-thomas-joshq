@@ -14,16 +14,17 @@ public class EchoServer {
       while (true) {
         // Wait until someone connects, thereby requesting a date
         Socket client = sock.accept();
-        System.out.println("Got a request!");
+        InputStream input = client.getInputStream();
+        OutputStream output = client.getOutputStream();
 
-        // Construct a writer so we can write to the socket, thereby
-        // sending something back to the client.
-        PrintWriter writer = new PrintWriter(client.getOutputStream(), true);
+        int bytesRead;
+        while ((bytesRead = input.read()) != -1) {
+          output.write(bytesRead);
+          output.flush();
+        }
+        input.close();
+        output.close();
 
-        // Send the current date back tothe client.
-        writer.println(new java.util.Date().toString());
-
-        // Close the client socket since we're done.
         client.close();
       }
     // *Very* minimal error handling.
